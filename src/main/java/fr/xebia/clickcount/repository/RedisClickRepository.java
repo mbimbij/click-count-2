@@ -1,6 +1,9 @@
 package fr.xebia.clickcount.repository;
 
 import fr.xebia.clickcount.RedisConfiguration;
+import fr.xebia.clickcount.hexagon.ICheckDataStoreHealth;
+import fr.xebia.clickcount.hexagon.ICountClicks;
+import fr.xebia.clickcount.hexagon.IRegisterANewClick;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
@@ -12,13 +15,13 @@ import org.redisson.client.RedisConnectionException;
 import org.redisson.client.protocol.RedisCommands;
 
 @Slf4j
-public class ClickRepository {
+public class RedisClickRepository implements ICountClicks, IRegisterANewClick, ICheckDataStoreHealth {
 
     private final Redisson redisson;
 
     private final RedisClient redisClient;
-//
-    public ClickRepository(RedisConfiguration configuration) {
+
+    public RedisClickRepository(RedisConfiguration configuration) {
         Config config = new Config();
         String redisHost = configuration.getHost();
         int redisPort = configuration.getPort();
@@ -29,7 +32,8 @@ public class ClickRepository {
         redisClient = new RedisClient(new NioEventLoopGroup(), NioSocketChannel.class, redisHost, redisPort, redisConnectionTimeoutMs);
     }
 
-    public String ping() {
+    @Override
+    public String checkDataStoreHealth() {
         RedisConnection conn = null;
         try {
             conn = redisClient.connect();
@@ -44,12 +48,14 @@ public class ClickRepository {
         }
     }
 
-    public long getCount() {
+    @Override
+    public long countClicks() {
         log.info(">> getCount");
         return redisson.getAtomicLong("count").get();
     }
 
-    public long incrementAndGet() {
+    @Override
+    public long registerANewClick() {
         log.info(">> incrementAndGet");
         return redisson.getAtomicLong("count").incrementAndGet();
     }
