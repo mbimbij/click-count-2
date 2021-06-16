@@ -14,3 +14,5 @@ cache:
 install:
   - mvn clean package -P docker
   - docker images
+
+script: skip
