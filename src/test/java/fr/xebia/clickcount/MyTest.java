@@ -16,4 +16,9 @@ public class MyTest {
   void passingTest() {
     assertThat(4).isEqualTo(2+2);
   }
+
+  @Test
+  void anotherPassingTest() {
+    assertThat(4).isEqualTo(2+2);
+  }
 }
