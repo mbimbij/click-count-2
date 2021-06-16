@@ -1,6 +1,6 @@
 # Click Count application
 
-[![Build Status](https://travis-ci.org/xebia-france/click-count.svg)](https://travis-ci.org/xebia-france/click-count)
+[![Build Status](https://travis-ci.com/mbimbij/click-count-2.svg?branch=main)](https://travis-ci.com/mbimbij/click-count-2)
 
 
 # Notes
