@@ -72,11 +72,6 @@ class SpringBootApplicationIT {
     });
   }
 
-  @Test
-  void name() {
-    assertThat(true).isFalse();
-  }
-
   static class Initializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
