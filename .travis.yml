@@ -1,5 +1,9 @@
 language: java
 jdk:
   - oraclejdk16
+cache:
+  directories:
+    - .autoconf
+    - $HOME/.m2
 install:
   - mvn clean package
