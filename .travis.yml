@@ -1,18 +1,16 @@
 language: java
-
 jdk:
-  - oraclejdk16
-
+- oraclejdk16
 services:
-  - docker
-
+- docker
 cache:
   directories:
-    - .autoconf
-    - $HOME/.m2
-
+  - ".autoconf"
+  - "$HOME/.m2"
 install:
-  - mvn clean package -P docker
-  - docker images
-
+- env
+- mvn clean package -P docker
+- docker images
 script: skip
+env:
+  - secure: rt866JWZQVAbozXyAbnyA79vhuqu/LMJFhSbVC//wfr7Q/ZuDgEXrRYTFrkjm0P8ges8KvHWjVnPga9D7/9IYsuSiAps4fEbrw1lfC9WIeNnvii2lqoxF5dIeppts0rS/HwMJpXt1/Wi32BZo/rlf5K9UQN/S0mCYGmm+EcmS5IXg7NYrp904Qw9tw+D9wbqBOD8xi0AtUbD1IhwJ7GzTqom3UEUsWhVUBmZJXuwU+d9qCn6r58LNurvwWPkLDy5QXnTXzwZQG/os3qmz+ZDcS+VkKSjE1RjcVKNbkMTf4J+9WbY8s1y6UuU/Ux31701Ovz2B2Dwsc+UCzOxok2e7YpYftklNYebQh41DfHvmTQf9d2ijqY/zolMR0Sh2zgTG6+R99sKNFMgUBFbG1jCYgz1Q9TvdaMxngtfAlB39YWD9RlPGg+IHdFXXJtqzKwWJCLODxtaGEBUvMhciOAlPc3FVlcjuDBl44ThXl6Q4eoloETI26ExFQvQLgVmcC7qJFr6ybzbWTZEZeLMBLJ6R8DQ+snv0SnjJGwsAaK/7jBDNG4AWFW2O3fRD+CeKXqBskz5cVy+DlrqTArkG/8yEXQL+ZVVeq0jKw9Ti0Sd+il6exqGBy8vg2ttgNUr+bRj+be1CiJCEZVzHf8pKdr+NbWz9ALLGYP0sPilDxJY7EE=
