@@ -1,9 +1,16 @@
 language: java
+
 jdk:
   - oraclejdk16
+
+services:
+  - docker
+
 cache:
   directories:
     - .autoconf
     - $HOME/.m2
+
 install:
-  - mvn clean package
+  - mvn clean package -P docker
+  - docker images
