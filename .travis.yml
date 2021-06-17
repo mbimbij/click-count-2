@@ -17,7 +17,6 @@ jobs:
         - docker tag click-count:latest $DOCKER_USERNAME/click-count:$IMAGE_TAG
         - docker push $DOCKER_USERNAME/click-count
     - stage: staging
-      script: skip
       before_deploy:
         # install AWS CLI
         - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -31,29 +30,30 @@ jobs:
           script: bash deployment/deploy.sh staging $DOCKER_USERNAME/click-count $IMAGE_TAG
           on:
             branch: main
-#    - stage: production
-#      before_install:
-#        # install AWS CLI
-#        - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#        - unzip awscliv2.zip
-#        - sudo ./aws/install
-#        # install Helm
-#        - curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-#        - helm version --short
-#      install: aws --version && echo $MY_VAR
+    - stage: production
+      before_deploy:
+        # install AWS CLI
+        - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        - unzip awscliv2.zip
+        - sudo ./aws/install
+        # install Helm
+        - curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+        - helm version --short
+      deploy:
+        - provider: script
+          script: bash deployment/deploy.sh production $DOCKER_USERNAME/click-count $IMAGE_TAG
+          on:
+            branch: main
+            condition: $DEPLOY_PROD = true
 
 before_install:
   - export IMAGE_TAG=$(git rev-parse --short HEAD)
+install: true
 script: skip
-#
-#deploy:
-#  - provider: script
-#    script: bash deployment/travis-deploy.sh staging
-#    on:
-#      branch: main
 env:
   global:
     - AWS_DEFAULT_REGION=eu-west-3
+    - DEPLOY_PROD=true
     - secure: gigVe0jdhiNF78xC8U9rZYsp7tu/l3tmF9yZVlcRpFxOAdxPDMI5JiWAGHE3J96qr66Gf5nLThENsJvdyZrA1XEFrGXnfjR5xfsr71eYDsY9M+/9cMRvJYfiojc+TLJkTYCoX9PLmx1WDzCaTNIYbTAfEfcgK8aTWn6++jkDZaGXvnau1rZf0Ek6tkiFIs127yO+j90go5rH4+5AM/iuQwyjs0TYGwJzynWfjrxt4o0fEXISiSkSwzf5KIIy6ldQd0nNjhUoA83ceB5Jkf1OMNCMGP68uHb+QSXkxWe4MCOVL2vMBWF+loL/tyNId8UTAchhCWzK5M0FQ5uqjQUIxUhd4JjZxB4rk2NezSi/snmjIugsvPGdH0Nomia6VKHw0g6VKAV5HjmSdbxS/thlOGVFtE5iH1Su9n0UzE4rXMNWd46sokdmThDAtvzJ3w2OSpibFAqxX2OJ6b6UDO7eCri0otwL97g06h2Uf3DN8k6mDDgotLr/TSLKsD6Ehe0z6HQo0UhXsoNxHEgthpAqezuhpkhywSqYy0Mdpjeeym3G8jKl5dmmiW4PtH3N9OSyMHf014xbdQU7ETI4RAlYKUWqiNNj8pBkGGHu39cCbJGrfNhf/G5ztIMLuAir/0cwHrNkwJqHtyYMuTWQYdvgmJ3bjxLDUMfDYs7Kr8HBjko=
     - secure: WnE2bu7IS37euhOacq3mSTkWNCUW0sUz/JnIa9SqPU/uYUMH03WS18GMVXPKAV5hC0O59kS/9cKeZqnwlUURHLxw8tV+b3tuGnUe6N3VjHBWseCUkSk+siN6WLChuRd9CFInmAjJt6c+JvGiLBymKwZyUSN4jxrQpV4Wt4HpVPzjdISr2TADMQ/DKRcQbYb6yrsSMlYLJ/MRynW7u0d/FxN8Ue6vS50phBKBFP3q7TBesczWj9fsS+d0cOohXnCHuMKj/CA/kX+1tMsbHf/XD/plIbOP0doNllXMDVpnFu9uk1sg8gKKE61qA830swXavZnYJfpziVu0Y8q3yNqe5wc0SS7fOyl343sjIpeZvTkJDC/dG+uU1JpUslny+XDii/H4kKiGyDUYhuuJWZg3FIURUVT0Xey+EWW3iZITk/jlHlOuMN1wbAA7aMoWpQEEQkjGyKdwTeZwU6SfYWkDYkj7ecJbVc/yULpGBLu7/9ejTe3HK3IIwFKBY9TnABqE3IEOtuJRIj5Ho8HnfbRoqOJ8ZGhw10aM/vucAZmOLKnpVFiHgYZ4L8D/9dow+iifFziGqPsJWU3JerAcwUVNdg8atO/Nc1nk9XO3zbmFbMbX6iJH/bT8FTE14BuZId4dau1bqLkoAJocQ1PFXuw5TL1Xif/WijbhMXV/Txl0k3g=
     - secure: seF1CKAkzhwUslnI/un4SeZdCU6mqsmHksJcAV8R5qyLheu3FWBe4Nl4aZ4t3kH50X8b74shKSilstgVOI1PxrZt9AeX+z5TZULngXIwlhp9fWfxOCvxF3TLamnbiqx3Y7LvoPMN18VT2R7+3ueh8gUi/SncuBs/38sUR4v1pqosKs+l0acEH4nfkJ6zKpQNIZhKBIRenAQMh2rAVS7YhaaKWil558fKVEUSwRnbE3a/+UqXZco8oP8N66hr4+vNgaBlSfJyFFBOMAakesZbsffqLp3a4f0CwSnuEHxpGvIKotJl6ZNGVIqVM3RaXRdQRRUEHswCHhSVSYlrxdKRhCB0bwqYv4PFk87Ft/ife+v6W7p4F235+oOLe+TrTj8v4f6jDvZEV8Y9hese9Y+EKpc6AuwLPI2tjzJ9eY7EIRU7Rm14/ReUM6m3ftmqHnFUZL7nWORdLIgYQN4AbL6BPW8I09tdar0VpzYTNZwCvQUfHCtzv+hz3aAF5004ml4Q5+t/VmgxTCgIVOtiVQTZUde+7HQY/Hmdu/QOSYazpnY50zvKJgkXcGDM2xzZs5lw8IHw/z7ZJCit2OYqV4uNwoJBxsIIlLmbCyhlgztjcZr2Q+vye+TyIevJ5zi3xAYdpBFAEB+wpnWCO94qPAT3m+Pqr8bPQ3g0f6n6P3+gmek=
