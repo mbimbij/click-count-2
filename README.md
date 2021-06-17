@@ -15,3 +15,5 @@
 ```
 
 2. `TravisCI` lance automatiquement `mvn test -B` si le langage est configuré comme étant `Java`. Pour désactiver ce comportement, il faut redéfinir le stage `script` du lifecycle de Travis.
+
+3. On ne peut pas faire facilement d'approbation manuelle avec `Travis`, à moins de faire une machine à gaz, nécessitant un flag et de pousser à nouveau
