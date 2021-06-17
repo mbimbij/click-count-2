@@ -18,7 +18,7 @@ kube-cluster: requires-environment-set
 	- eksctl create cluster -f $(ENVIRONMENT)-eksctl-cluster-template-processed.yml
 	eksctl create iamidentitymapping \
 		--cluster click-count-$(ENVIRONMENT) \
-		--arn arn:aws:iam::$(AWS_ACCOUNT_ID):role/travis-deployer \
+		--arn arn:aws:iam::$(AWS_ACCOUNT_ID):user/travis-deployer \
 		--group system:masters \
 		--username travis-deployer
 delete-kube-cluster-staging:
@@ -54,9 +54,20 @@ delete-redis-cluster: requires-environment-set
 	./stack-deletion/delete-stack-wait-termination.sh click-count-$(ENVIRONMENT)-redis
 
 
+environment-staging:
+	$(MAKE) environment ENVIRONMENT=staging
+environment-production:
+	$(MAKE) environment ENVIRONMENT=production
 environment: requires-environment-set
 	- $(MAKE) kube-cluster ENVIRONMENT=$(ENVIRONMENT)
 	$(MAKE) redis-cluster ENVIRONMENT=$(ENVIRONMENT)
+delete-environment-staging:
+	$(MAKE) delete-environment ENVIRONMENT=staging
+delete-environment-production:
+	$(MAKE) delete-environment ENVIRONMENT=production
 delete-environment: requires-environment-set
-	$(MAKE) delete-kube-cluster ENVIRONMENT=$(ENVIRONMENT)
 	$(MAKE) delete-redis-cluster ENVIRONMENT=$(ENVIRONMENT)
+	$(MAKE) delete-kube-cluster ENVIRONMENT=$(ENVIRONMENT)
+
+delete-all:
+	$(MAKE) -j2 delete-environment-staging delete-environment-production
