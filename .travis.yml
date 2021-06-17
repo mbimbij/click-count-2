@@ -27,7 +27,7 @@ jobs:
         - helm version --short
       deploy:
         - provider: script
-          script: bash deployment/travis-deploy.sh staging $DOCKER_USERNAME/click-count $IMAGE_TAG
+          script: bash deployment/deploy.sh staging $DOCKER_USERNAME/click-count $IMAGE_TAG
           on:
             branch: main
 #    - stage: production

@@ -26,6 +26,6 @@ spec:
         - name: SERVER_PORT
           value: {{ .Values.application.port | quote }}
         - name: REDIS_HOST
-          value: {{ .Values.redis.host }}
+          value: {{ .Values.redis.address }}
         - name: REDIS_PORT
           value: {{ .Values.redis.port | quote }}

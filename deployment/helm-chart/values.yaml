@@ -6,7 +6,7 @@ application:
   replicas: 2
 
 redis:
-  host: localhost
+  address: localhost
   port: 6379
 
 #imageUrl: example.org/someimage
