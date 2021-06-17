@@ -14,12 +14,10 @@ jobs:
       install:
         - mvn clean verify -P docker
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - export IMAGE_TAG=$(git rev-parse --short HEAD)
         - docker tag click-count:latest $DOCKER_USERNAME/click-count:$IMAGE_TAG
         - docker push $DOCKER_USERNAME/click-count
     - stage: staging
-      script: aws --version && echo $MY_VAR
-      before_install:
+      before_deploy:
         # install AWS CLI
         - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
         - unzip awscliv2.zip
@@ -27,19 +25,25 @@ jobs:
         # install Helm
         - curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         - helm version --short
-    - stage: production
-      script: aws --version && echo $MY_VAR
-#before_install:
-#  # install AWS CLI
-#  - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#  - unzip awscliv2.zip
-#  - sudo ./aws/install
-#  # install Helm
-#  - curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-#  - helm version --short
-#
-#install: true
-#script: skip
+      deploy:
+        - provider: script
+          script: bash deployment/travis-deploy.sh staging $DOCKER_USERNAME/click-count $IMAGE_TAG
+          on:
+            branch: main
+#    - stage: production
+#      before_install:
+#        # install AWS CLI
+#        - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+#        - unzip awscliv2.zip
+#        - sudo ./aws/install
+#        # install Helm
+#        - curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+#        - helm version --short
+#      install: aws --version && echo $MY_VAR
+
+before_install:
+  - export IMAGE_TAG=$(git rev-parse --short HEAD)
+script: skip
 #
 #deploy:
 #  - provider: script
