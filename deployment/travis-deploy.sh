@@ -6,7 +6,12 @@ if [ -z $1 ]; then
 fi
 
 ENVIRONMENT=$1
+cd "$(dirname "$0")" || exit 255
 
 aws eks update-kubeconfig --name click-count-$ENVIRONMENT
-kubectl get nodes
-ls
+helm upgrade -i --debug click-count ./helm-chart \
+  --set application.name=click-count \
+  --set redis.host=localhost \
+  --set redis.port=6379 \
+  --set imageUrl=cless91/click-count \
+  --set imageTag=latest
