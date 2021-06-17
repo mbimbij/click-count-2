@@ -8,16 +8,11 @@ cache:
   - ".autoconf"
   - "$HOME/.m2"
 install:
-- mvn clean package -P docker
-- docker images
-- echo "$DOCKER_USERNAME"
-- echo "$DOCKER_PASSWORD"
-after_success:
-- echo "$DOCKER_USERNAME"
-- echo "$DOCKER_PASSWORD"
-- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-- docker tag click-count:latest $DOCKER_USERNAME/click-count
-- docker push $DOCKER_USERNAME/click-count
+  - mvn clean package -P docker
+  - docker images
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker tag click-count:latest $DOCKER_USERNAME/click-count
+  - docker push $DOCKER_USERNAME/click-count
 script: skip
 env:
   global:
