@@ -7,13 +7,18 @@ cache:
   directories:
   - ".autoconf"
   - "$HOME/.m2"
-install:
-  - mvn clean package -P docker
-  - docker images
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker tag click-count:latest $DOCKER_USERNAME/click-count
-  - docker push $DOCKER_USERNAME/click-count
+#install:
+#  - mvn clean package -P docker
+#  - docker images
+#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+#  - docker tag click-count:latest $DOCKER_USERNAME/click-count
+#  - docker push $DOCKER_USERNAME/click-count
 script: skip
+deploy:
+  - provider: script
+    script: echo "coucou deploy"
+    on:
+      branch: main
 env:
   global:
   - secure: gigVe0jdhiNF78xC8U9rZYsp7tu/l3tmF9yZVlcRpFxOAdxPDMI5JiWAGHE3J96qr66Gf5nLThENsJvdyZrA1XEFrGXnfjR5xfsr71eYDsY9M+/9cMRvJYfiojc+TLJkTYCoX9PLmx1WDzCaTNIYbTAfEfcgK8aTWn6++jkDZaGXvnau1rZf0Ek6tkiFIs127yO+j90go5rH4+5AM/iuQwyjs0TYGwJzynWfjrxt4o0fEXISiSkSwzf5KIIy6ldQd0nNjhUoA83ceB5Jkf1OMNCMGP68uHb+QSXkxWe4MCOVL2vMBWF+loL/tyNId8UTAchhCWzK5M0FQ5uqjQUIxUhd4JjZxB4rk2NezSi/snmjIugsvPGdH0Nomia6VKHw0g6VKAV5HjmSdbxS/thlOGVFtE5iH1Su9n0UzE4rXMNWd46sokdmThDAtvzJ3w2OSpibFAqxX2OJ6b6UDO7eCri0otwL97g06h2Uf3DN8k6mDDgotLr/TSLKsD6Ehe0z6HQo0UhXsoNxHEgthpAqezuhpkhywSqYy0Mdpjeeym3G8jKl5dmmiW4PtH3N9OSyMHf014xbdQU7ETI4RAlYKUWqiNNj8pBkGGHu39cCbJGrfNhf/G5ztIMLuAir/0cwHrNkwJqHtyYMuTWQYdvgmJ3bjxLDUMfDYs7Kr8HBjko=
