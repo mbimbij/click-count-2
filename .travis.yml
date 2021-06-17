@@ -17,6 +17,7 @@ jobs:
         - docker tag click-count:latest $DOCKER_USERNAME/click-count:$IMAGE_TAG
         - docker push $DOCKER_USERNAME/click-count
     - stage: staging
+      script: skip
       before_deploy:
         # install AWS CLI
         - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
